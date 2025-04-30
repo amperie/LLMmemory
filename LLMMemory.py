@@ -1,8 +1,11 @@
 import redis
 from datetime import datetime
+
+
 class LLMMemory:
 
     _rc: redis.Redis
+    _sequence_dict: dict
 
     def __init__(
             self, host='localhost', port=6379,
@@ -15,18 +18,23 @@ class LLMMemory:
             db=db,
             username=username, password=password
             )
+        self._sequence_dict = {}
 
     def add(self, user_id, chat_id, message, role):
+        seq_id = self._sequence_dict.get(user_id, 0) + 1
+
         msg = {
             "role": role,
             "chat_id": chat_id,
             "content": message,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
+            "sequence_id": seq_id,
         }
         self._rc.hset(
-            f"messages:{user_id}",
+            f"messages:{user_id}_seq_{seq_id}",
             mapping=msg
         )
+        self._sequence_dict[user_id] = seq_id
 
     def get(self, user_id, chat_id):
         retVal = self._rc.hgetall(f"messages:{user_id}")
@@ -42,13 +50,13 @@ lm = LLMMemory(
 )
 
 lm.add(
-    user_id="2",
+    user_id="5",
     chat_id="1",
     message="Hello, how are you?",
     role="user"
 )
 lm.add(
-    user_id="3",
+    user_id="5",
     chat_id="1",
     message="I'm fine, thank you!",
     role="assistant"
