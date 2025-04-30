@@ -48,7 +48,10 @@ class LLMMemory:
         self._rc.ft("idx:messages").dropindex(delete_documents=True)
 
     def initialize_memory(self):
-        self.clear_all_memory()
+        try:
+            self.clear_all_memory()
+        except redis.exceptions.ResponseError:
+            pass
         schema = (
             TextField("$.role", as_name="role"),
             TextField("$.user_id", as_name="user_id"),
@@ -88,38 +91,8 @@ class LLMMemory:
         retVal = [json.loads(doc.json) for doc in res.docs]
         return retVal
 
-
-lm = LLMMemory(
-    host='redis-13783.c98.us-east-1-4.ec2.redns.redis-cloud.com',
-    port=13783,
-    decode_responses=True,
-    username="default",
-    password="vhVw1FuYKq6QQ2Enct3G0iJSYrRyA2cY",
-)
-
-lm.add_message(
-    user_id="5",
-    chat_id=1,
-    message="Hello, how are you?",
-    role="user"
-)
-lm.add_message(
-    user_id="5",
-    chat_id=1,
-    message="I'm fine, thank you!",
-    role="assistant"
-)
-lm.add_message(
-    user_id="5",
-    chat_id=1,
-    message="#3",
-    role="assistant"
-)
-
-print(lm._get_next_sequence_id(user_id="5"))
-print(lm._get_next_sequence_id(user_id="6"))
-
-g2 = lm.get_last_n_messages(user_id="5", chat_id=1, n=2)
-print(g2)
+    def get_last_n_messages_as_string(self, user_id, chat_id, n):
+        retVal = self.get_last_n_messages(user_id, chat_id, n)
+        return "\n".join([f"{msg['role']}: {msg['content']}" for msg in retVal])
 
 pass
