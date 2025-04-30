@@ -1,0 +1,14 @@
+redis:
+  host: 'redis-13783.c98.us-east-1-4.ec2.redns.redis-cloud.com'
+  port: 13783
+  username: 'default'
+  password: 'vhVw1FuYKq6QQ2Enct3G0iJSYrRyA2cY'
+  decode_responses: true
+  db: 0
+
+# Optional settings
+chat:
+  memory_length: 10  # Number of messages to keep in memory
+  user_id: '1'       # Default user ID
+  chat_id: 1   # Default chat ID 
+  openai_token: ""

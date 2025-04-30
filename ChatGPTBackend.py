@@ -3,8 +3,8 @@ import os
 
 
 class ChatGPTBackend:
-    def __init__(self):
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    def __init__(self, token):
+        self.client = OpenAI(api_key=token)
 
     def get_response(self, messages):
         response = self.client.chat.completions.create(
