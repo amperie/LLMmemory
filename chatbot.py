@@ -7,10 +7,11 @@ if "messages" not in st.session_state:
 if "use_memory" not in st.session_state:
     st.session_state.use_memory = False
 
-# Initialize ChatManager
+
 @st.cache_resource
 def get_chat_manager():
     return ChatManager()
+
 
 chat_manager = get_chat_manager()
 
@@ -19,7 +20,9 @@ st.title("🤖 Chatbot")
 st.markdown("A simple chatbot with optional memory")
 
 # Memory toggle
-st.session_state.use_memory = st.checkbox("Use Chat Memory", value=st.session_state.use_memory)
+st.session_state.use_memory = st.checkbox(
+    "Use Chat Memory", value=st.session_state.use_memory)
+memory_text = st.text_input("User ID", key="memory_text")
 
 # Display chat messages
 for message in st.session_state.messages:
@@ -30,11 +33,11 @@ for message in st.session_state.messages:
 if prompt := st.chat_input("What would you like to know?"):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
+
     # Display user message
     with st.chat_message("user"):
         st.markdown(prompt)
-    
+
     # Get response from ChatManager
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
@@ -45,13 +48,14 @@ if prompt := st.chat_input("What would you like to know?"):
                     use_memory=st.session_state.use_memory
                 )
                 st.markdown(response)
-                
+
                 # Add assistant response to chat history
-                st.session_state.messages.append({"role": "assistant", "content": response})
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": response})
             except Exception as e:
                 st.error(f"Error getting response: {str(e)}")
 
 # Clear chat button
 if st.button("Clear Chat"):
     st.session_state.messages = []
-    st.experimental_rerun() 
+    st.experimental_rerun()

@@ -3,7 +3,6 @@ import time
 import json
 from redis.commands.json.path import Path
 from redis.commands.search.field import TextField, NumericField
-from redis.commands.search.field import TagField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from redis.commands.search.query import Query
 import redis.exceptions
@@ -93,6 +92,8 @@ class LLMMemory:
 
     def get_last_n_messages_as_string(self, user_id, chat_id, n):
         retVal = self.get_last_n_messages(user_id, chat_id, n)
-        return "\n".join([f"{msg['role']}: {msg['content']}" for msg in retVal])
+        return "\n".join(
+            [f"{msg['role']}: {msg['content']}" for msg in retVal])
+
 
 pass
