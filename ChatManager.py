@@ -34,7 +34,7 @@ class ChatManager:
             use_memory: bool = True,
             mem_length: int = None
     ) -> str:
-        # Use default user_id if not provided
+
         user_id = user_id or self._default_user_id
         mem_length = mem_length or self._memory_length
 

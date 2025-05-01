@@ -22,7 +22,6 @@ st.markdown("A simple chatbot with optional memory")
 # Memory toggle
 st.session_state.use_memory = st.checkbox(
     "Use Chat Memory", value=st.session_state.use_memory)
-memory_text = st.text_input("User ID", key="memory_text")
 
 # Display chat messages
 for message in st.session_state.messages:
